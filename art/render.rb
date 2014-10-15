@@ -9,6 +9,7 @@ images = {
 	'conversations_baloon.svg' => ['ic_launcher', 48],
 	'conversations_mono.svg' => ['ic_notification', 24],
 	'ic_received_indicator.svg' => ['ic_received_indicator', 12],
+	'ic_secure_indicator.svg' => ['ic_secure_indicator', 12],
 	}
 images.each do |source, result|
 	resolutions.each do |name, factor|
