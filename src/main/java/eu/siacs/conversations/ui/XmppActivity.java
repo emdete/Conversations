@@ -746,6 +746,7 @@ public abstract class XmppActivity extends Activity {
 			view.setImageBitmap(bitmap);
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setView(view);
+			builder.setTitle(uri);
 			builder.create().show();
 		}
 	}
