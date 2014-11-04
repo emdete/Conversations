@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.siacs.conversations.R;
+import eu.siacs.conversations.Config;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Message;
@@ -107,12 +108,21 @@ public class ConversationActivity extends XmppActivity implements
 
 	@Override
 	protected String getShareableUri() {
+		String uri = null;
 		Conversation conversation = getSelectedConversation();
-		if (conversation != null) {
-			return conversation.getAccount().getShareableUri();
-		} else {
-			return "";
+		if (conversation == null) {
+			uri = "";
 		}
+		else if (isConversationsOverviewVisable()) {
+			uri = super.getShareableUri();
+		}
+		else if (conversation.getMode() == Conversation.MODE_MULTI) {
+			uri = "xmpp:" + conversation.getContactJid().toBareJid() + "?join";
+		}
+		else {
+			uri = "xmpp:" + conversation.getContactJid().toBareJid();
+		}
+		return uri;
 	}
 
 	public void hideConversationsOverview() {
