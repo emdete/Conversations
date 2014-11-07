@@ -138,7 +138,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
 		} else {
 			if ((message.getEncryption() != Message.ENCRYPTION_PGP)
 					&& (message.getEncryption() != Message.ENCRYPTION_DECRYPTION_FAILED)) {
-				mLastMessage.setText(message.getBody());
+				mLastMessage.setText(UIHelper.transformAsciiEmoticons(message.getBody()));
 			} else {
 				mLastMessage.setText(R.string.encrypted_message_received);
 			}
