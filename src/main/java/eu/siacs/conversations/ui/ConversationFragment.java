@@ -56,6 +56,7 @@ import eu.siacs.conversations.ui.XmppActivity.OnValueEdited;
 import eu.siacs.conversations.ui.adapter.MessageAdapter;
 import eu.siacs.conversations.ui.adapter.MessageAdapter.OnContactPictureClicked;
 import eu.siacs.conversations.ui.adapter.MessageAdapter.OnContactPictureLongClicked;
+import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xmpp.jid.Jid;
 
 public class ConversationFragment extends Fragment {
@@ -211,8 +212,8 @@ public class ConversationFragment extends Fragment {
 			}
 			return;
 		}
-		Message message = new Message(conversation, mEditMessage.getText()
-				.toString(), conversation.getNextEncryption(activity
+		Message message = new Message(conversation, UIHelper.transformAsciiEmoticons(mEditMessage.getText()
+				.toString()), conversation.getNextEncryption(activity
 				.forceEncryption()));
 		if (conversation.getMode() == Conversation.MODE_MULTI) {
 			if (conversation.getNextCounterpart() != null) {
