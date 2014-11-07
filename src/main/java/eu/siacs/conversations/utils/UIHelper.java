@@ -3,6 +3,7 @@ package eu.siacs.conversations.utils;
 import java.util.Calendar;
 import java.util.Date;
 
+import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import android.content.Context;
 import android.text.format.DateFormat;
@@ -83,6 +84,79 @@ public class UIHelper {
 			return context.getString(R.string.last_seen_days,
 					Math.round(difference / (60.0 * 60.0 * 24.0)));
 		}
+	}
+
+	private final static class EmoticonPattern {
+		java.util.regex.Pattern pattern;
+		String replacement;
+
+		EmoticonPattern(String ascii, int unicode) {
+			this.pattern = java.util.regex.Pattern.compile("(?<=(^|\\s))" + ascii
+					+ "(?=(\\s|$))");
+			this.replacement = new String(new int[] { unicode, }, 0, 1);
+		}
+
+		String replaceAll(String body) {
+			return pattern.matcher(body).replaceAll(replacement);
+		}
+	}
+
+	static final boolean PARSE_EMOTICONS = true;
+
+	private static final EmoticonPattern[] patternsPre = new EmoticonPattern[] {
+			// new EmoticonPattern(":-?D", 0x1f600),
+			new EmoticonPattern("\\^\\^", 0x1f601),
+			new EmoticonPattern(":'D", 0x1f602),
+			new EmoticonPattern(":'\\(", 0x1F622),
+			// new EmoticonPattern("\\]-?D", 0x1f608),
+			new EmoticonPattern(";-?\\)", 0x1f609),
+			new EmoticonPattern(":-?\\)", 0x1f60a),
+			// new EmoticonPattern("[B8]-?\\)", 0x1f60e),
+			// new EmoticonPattern(":-?\\|", 0x1f610),
+			// new EmoticonPattern(":-?[/\\\\]", 0x1f615),
+			// new EmoticonPattern(":-?\\*", 0x1f617),
+			// new EmoticonPattern(":-?[Ppb]", 0x1f61b),
+			new EmoticonPattern(":-?\\(", 0x1f61e),
+			// new EmoticonPattern(":-?[0Oo]", 0x1f62e),
+			new EmoticonPattern("\\\\o/", 0x1F631),
+			};
+
+	private static final EmoticonPattern[] patternsKitkat = new EmoticonPattern[] {
+			new EmoticonPattern(":-?D", 0x1f600),
+			new EmoticonPattern("\\^\\^", 0x1f601),
+			new EmoticonPattern(":'D", 0x1f602),
+			new EmoticonPattern(":'\\(", 0x1F622),
+			new EmoticonPattern("\\]-?D", 0x1f608),
+			new EmoticonPattern(";-?\\)", 0x1f609),
+			new EmoticonPattern(":-?\\)", 0x1f60a),
+			new EmoticonPattern("[B8]-?\\)", 0x1f60e),
+			new EmoticonPattern(":-?\\|", 0x1f610),
+			new EmoticonPattern(":-?[/\\\\]", 0x1f615),
+			new EmoticonPattern(":-?\\*", 0x1f617),
+			new EmoticonPattern(":-?[Ppb]", 0x1f61b),
+			new EmoticonPattern(":-?\\(", 0x1f61e),
+			new EmoticonPattern(":-?[0Oo]", 0x1f62e),
+			new EmoticonPattern("\\\\o/", 0x1F631),
+			};
+
+	/**
+	 * transfrom ascii emoticons to unicode ones.
+	 *
+	 * @body: text to transform
+	 * @origin: usage of the body, NULL for display, other for sening
+	 */
+	public static String transformAsciiEmoticons(String body) {
+		if (body != null) {
+			// check if transformation is enabled in config
+			if (PARSE_EMOTICONS) {
+				// check the version to reduce patterns on pre-kitkat
+				for (EmoticonPattern p : android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT ? patternsKitkat : patternsPre) {
+					body = p.replaceAll(body);
+				}
+			}
+			body = body.trim();
+		}
+		return body;
 	}
 
 	public static int getColorForName(String name) {
